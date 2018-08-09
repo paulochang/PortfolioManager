@@ -1,7 +1,7 @@
 ﻿using System;
 namespace statgen.Models
 {
-    public class Stock
+    public class StockViewDTO
     {
         /*
         Symbol: 'MSFT',

@@ -7,21 +7,21 @@ namespace statgen.Hubs
     public class StockStatsHub : Hub
     {
 
-        public IEnumerable<Stock> GetAllStocks()
+        public IEnumerable<StockViewDTO> GetAllStocks()
         {
-            Stock appleStock = new Stock
+            StockViewDTO appleStock = new StockViewDTO
             {
                 Symbol = "APPL",
                 Price = 158.44m
             };
 
-            Stock msStock = new Stock
+            StockViewDTO msStock = new StockViewDTO
             {
                 Symbol = "MSFT",
                 Price = 75.12m
             };
 
-            Stock googleStock = new Stock
+            StockViewDTO googleStock = new StockViewDTO
             {
                 Symbol = "GOOG",
                 Price = 924.54m
@@ -32,7 +32,7 @@ namespace statgen.Hubs
             googleStock.Price = 925.37m;
             googleStock.Price = 923.42m;
 
-            List<Stock> myList = new List<Stock>{
+            List<StockViewDTO> myList = new List<StockViewDTO>{
                 appleStock,
                 msStock,
                 googleStock

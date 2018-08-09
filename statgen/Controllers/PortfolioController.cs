@@ -8,6 +8,7 @@ using statgen.Models;
 
 namespace statgen.Controllers
 {
+
     [ApiController]
     public class PortfolioController : ControllerBase
     {
