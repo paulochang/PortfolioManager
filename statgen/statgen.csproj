@@ -10,6 +10,7 @@
     <Folder Include="Models\" />
     <Folder Include="wwwroot\lib\" />
     <Folder Include="Controllers\" />
+    <Folder Include="SQLite\" />
   </ItemGroup>
 
   <ItemGroup>

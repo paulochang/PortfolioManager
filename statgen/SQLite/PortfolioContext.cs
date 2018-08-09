@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace statgen.Models
+namespace statgen.SQLite
 {
     public class PortfolioContext : DbContext
     {
@@ -58,7 +58,7 @@ namespace statgen.Models
         public int PortfolioId { get; set; }
         public Portfolio Portfolio { get; set; }
         public int StockId { get; set; }
-        public StockViewDTO Stock { get; set; }
+        public Stock Stock { get; set; }
         public int Qty { get; set; }
     }
 
@@ -67,7 +67,7 @@ namespace statgen.Models
         public int Id { get; set; }
         public DateTime Datetime { get; set; }
         public int StockId { get; set; }
-        public StockViewDTO Stock { get; set; }
+        public Stock Stock { get; set; }
         public double Price { get; set; }
     }
 
@@ -76,7 +76,7 @@ namespace statgen.Models
         public int Id { get; set; }
         public DateTime DateTime { get; set; }
         public int StockId { get; set; }
-        public StockViewDTO Stock { get; set; }
+        public Stock Stock { get; set; }
         public double? Return { get; set; }
     }
 
