@@ -18,6 +18,9 @@ namespace statgen.SQLite
         public DbSet<PortfolioDailyReturn> PortfolioDailyReturns { get; set; }
         public DbSet<PortfolioHourlyReturn> PortfolioHourlyReturns { get; set; }
 
+        public PortfolioContext(DbContextOptions<PortfolioContext> options)
+            : base(options) { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }

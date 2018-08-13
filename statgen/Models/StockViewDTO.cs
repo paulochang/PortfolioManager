@@ -12,7 +12,7 @@ namespace statgen.Models
         Change: 0.42,
         Perc: 0.56
         */
-        
+
         private decimal _price;
 
         public string Symbol { get; set; }
