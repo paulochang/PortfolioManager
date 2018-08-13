@@ -3,15 +3,6 @@ namespace statgen.Models
 {
     public class StockViewDTO
     {
-        /*
-        Symbol: 'MSFT',
-        Price: 75.54,
-        Open: 75.12,
-        High: 75.54,
-        Low: 75.12,
-        Change: 0.42,
-        Perc: 0.56
-        */
 
         private decimal _price;
 

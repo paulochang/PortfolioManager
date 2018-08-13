@@ -71,9 +71,9 @@
             </div>
         </div>
         <h2>Partial Update</h2>
-        <form v-on:submit.prevent="addStockPriceChange">
+        <form v-on:submit.prevent="updateStockPrice">
             <select v-model="stockIndex">
-                <option v-for="(item, index) in stocks" :value="index"> {{item.symbol}} </option>
+                <option v-for="(item, index) in portfolioStocks" :value="item.stockId"> {{item.stockName}} </option>
             </select>
             <input type="text" v-model="newStockPrice" />
             <input type="submit" value="Send" />

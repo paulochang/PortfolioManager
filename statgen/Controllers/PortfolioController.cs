@@ -6,6 +6,7 @@ using statgen.Hubs;
 using statgen.Models;
 using statgen.SQLite;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,25 +26,37 @@ namespace statgen.Controllers
         }
 
         [HttpPut("/price")]
-        public Task PostPriceChange(StockPriceChange stockPriceChange){
+        public Task PostPriceChange(StockPriceChange stockPriceChange)
+        {
             return this.hubContext.Clients.All.SendAsync("Update", stockPriceChange);
         }
 
         [HttpGet("/portfolio/{id}")]
-        public ActionResult<IEnumerable<PortfolioComponentViewDTO>> Get(int id)
+        public async Task<ActionResult<IEnumerable<PortfolioComponentViewDTO>>> Get(int id)
         {
-            List<PortfolioComponentViewDTO> result = this.portfolioContext.PortfolioAllocations
+            return await this.portfolioContext.PortfolioAllocations
                                                          .Where(p => p.PortfolioId == id)
                                                          .Select(p =>
-                                                                 new PortfolioComponentViewDTO() {                                                                
-                                                                    Qty = p.Qty,
-                                                                    StockName = p.Stock.Name,
-                                                                    UnitValue = p.Stock.LatestPrice,
-                                                                    TotalValue = p.Stock.LatestPrice * p.Qty
-                                                                }
-                                                            ).ToList();
-            return result;
+                                                                 new PortfolioComponentViewDTO(
+                                                                     p.StockId,
+                                                                     p.Qty,
+                                                                     p.Stock.Name,
+                                                                     p.Stock.LatestPrice,
+                                                                     (p.Stock.LatestPrice * p.Qty)
+                                                                    )
+                                                            ).ToListAsync();
         }
 
+        [HttpPut("/stock/{id}/price")]
+        public async Task PutStockPriceChange(int id, [FromBody] double stockPriceChange)
+        {
+            Stock currentStock = await this.portfolioContext.Stocks.Where(p => p.StockId == id)
+                                           .FirstAsync();
+            currentStock.LatestPrice = stockPriceChange;
+
+            await this.portfolioContext.SaveChangesAsync();
+
+            await this.hubContext.Clients.All.SendAsync("UpdatePortfolio");
+        }
     }
 }
