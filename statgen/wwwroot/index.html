@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Portfolio Visualizer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
 
 </head>
+
 <body>
     <div id="app" class="container">
-        <h1>{{  header.toLocaleUpperCase() }}</h1>
+        <h1>{{ header.toLocaleUpperCase() }}</h1>
+
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -36,7 +40,36 @@
                 </tr>
             </tbody>
         </table>
-
+        <div class="row">
+            <canvas id="allocChart" class="col-md-6"></canvas>
+            
+            <div class="col-md-6">
+                <table class="table table-bordered table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th>Qty</th>
+                            <th>Stock</th>
+                            <th>Unit Price</th>
+                            <th>Total Value</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">Portfolio Total</th>
+                            <th>{{portfolioTotal.toFixed(2)}}</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <tr v-for="(item, index) in portfolioStocks" :key="index">
+                            <td>{{item.qty}}</td>
+                            <td>{{item.stockName}}</td>
+                            <td>{{item.unitValue.toFixed(2)}}</td>
+                            <td>{{item.totalValue.toFixed(2)}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <h2>Partial Update</h2>
         <form v-on:submit.prevent="addStockPriceChange">
             <select v-model="stockIndex">
@@ -48,10 +81,13 @@
 
 
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aspnet/signalr/dist/browser/signalr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/msgpack5/dist/msgpack5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@aspnet/signalr-protocol-msgpack/dist/browser/signalr-protocol-msgpack.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
     <script src="lib/statgen.js"></script>
 </body>
+
 </html>
