@@ -1,9 +1,9 @@
 ﻿using System;
+
 namespace statgen.Models
 {
     public class StockViewDTO
     {
-
         private decimal _price;
 
         public string Symbol { get; set; }
@@ -16,50 +16,23 @@ namespace statgen.Models
 
         public decimal LastChange { get; private set; }
 
-        public decimal Change
-        {
-            get
-            {
-                return Price - Open;
-            }
-        }
+        public decimal Change => Price - Open;
 
-        public double Perc
-        {
-            get
-            {
-                return (double)Math.Round(Change / Price, 4);
-            }
-        }
+        public double Perc => (double) Math.Round(Change / Price, 4);
 
         public decimal Price
         {
-            get
-            {
-                return _price;
-            }
+            get => _price;
             set
             {
-                if (_price == value)
-                {
-                    return;
-                }
+                if (_price == value) return;
 
                 LastChange = value - _price;
                 _price = value;
 
-                if (Open == 0)
-                {
-                    Open = _price;
-                }
-                if (_price < Low || Low == 0)
-                {
-                    Low = _price;
-                }
-                if (_price > High)
-                {
-                    High = _price;
-                }
+                if (Open == 0) Open = _price;
+                if (_price < Low || Low == 0) Low = _price;
+                if (_price > High) High = _price;
             }
         }
     }

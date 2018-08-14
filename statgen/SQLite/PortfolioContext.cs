@@ -6,6 +6,11 @@ namespace statgen.SQLite
 {
     public class PortfolioContext : DbContext
     {
+        public PortfolioContext(DbContextOptions<PortfolioContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<Portfolio> Portfolios { get; set; }
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<PortfolioAllocation> PortfolioAllocations { get; set; }
@@ -17,9 +22,6 @@ namespace statgen.SQLite
         public DbSet<PortfolioMinuteReturn> PortfolioMinuteReturns { get; set; }
         public DbSet<PortfolioDailyReturn> PortfolioDailyReturns { get; set; }
         public DbSet<PortfolioHourlyReturn> PortfolioHourlyReturns { get; set; }
-
-        public PortfolioContext(DbContextOptions<PortfolioContext> options)
-            : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,7 +38,6 @@ namespace statgen.SQLite
         public int PortfolioId { get; set; }
         public string Owner { get; set; }
         public ICollection<PortfolioAllocation> PortfolioStocks { get; set; }
-
     }
 
     public class Stock
@@ -83,11 +84,17 @@ namespace statgen.SQLite
         public double? Return { get; set; }
     }
 
-    public class StockMinuteReturn : StockReturn { };
+    public class StockMinuteReturn : StockReturn
+    {
+    }
 
-    public class StockDailyReturn : StockReturn { };
+    public class StockDailyReturn : StockReturn
+    {
+    }
 
-    public class StockHourlyReturn : StockReturn { };
+    public class StockHourlyReturn : StockReturn
+    {
+    }
 
     public class PortfolioPriceRecord
     {
@@ -107,9 +114,15 @@ namespace statgen.SQLite
         public double Return { get; set; }
     }
 
-    public class PortfolioMinuteReturn : PortfolioReturn { };
+    public class PortfolioMinuteReturn : PortfolioReturn
+    {
+    }
 
-    public class PortfolioDailyReturn : PortfolioReturn { };
+    public class PortfolioDailyReturn : PortfolioReturn
+    {
+    }
 
-    public class PortfolioHourlyReturn : PortfolioReturn { };
+    public class PortfolioHourlyReturn : PortfolioReturn
+    {
+    }
 }
