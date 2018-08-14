@@ -52,28 +52,22 @@
         }
     });
 
-    connection.on("UpdatePortfolio", stock => {
-        updatePortfolioView();
-    });
 
-    connection.on("Update", stock => {
-        priceUpdate(stock);
-    });
 
-    var priceUpdate = function (stock) {
+    let priceUpdate = function (stock) {
         let currentStock = app.stocks[stock.index];
         if (currentStock.price !== stock.price) {
             currentStock.lastChange = currentStock.price - stock.price;
             currentStock.price = stock.price;
-            if (currentStock.open == 0) currentStock.open = stock.price;
-            if (currentStock.low > stock.price || currentStock.low == 0) currentStock.low = stock.price;
+            if (currentStock.open === 0) currentStock.open = stock.price;
+            if (currentStock.low > stock.price || currentStock.low === 0) currentStock.low = stock.price;
             if (currentStock.high < stock.price) currentStock.high = stock.price;
             currentStock.change = currentStock.price - currentStock.open;
             currentStock.perc = (currentStock.change / currentStock.price).toFixed(2);
         }
     };
 
-    var chart = new Chart(document.getElementById("allocChart"),
+    let chart = new Chart(document.getElementById("allocChart"),
         {
             type: 'pie',
             data: app.pieData,
@@ -85,7 +79,7 @@
             }
         });
 
-    var chartUpdate = async function () {
+    let chartUpdate = async function () {
         app.pieData.datasets[0].data.length = 0;
         app.pieData.labels.length = 0;
 
@@ -97,15 +91,7 @@
         await chart.update();
     };
 
-    await connection.start().then(function () {
-        connection.invoke("GetAllStocks").then(function (stocks) {
-            for (let i = 0; i < stocks.length; i++) {
-                app.stocks.push(stocks[i]);
-            }
-        });
-    });
-
-    var updatePortfolioView = async function () {
+    let updatePortfolioView = async function () {
         const response = await fetch("/portfolio/1", {
             method: "GET",
             headers: {
@@ -113,10 +99,23 @@
             }
         });
         // Vue specific
-        const stockContents = await response.json();
-        app.portfolioStocks = stockContents;
+        app.portfolioStocks = await response.json();
         await chartUpdate();
     };
+    
+    connection.on("UpdatePortfolio", updatePortfolioView);
+
+    connection.on("Update", stock => {
+        priceUpdate(stock);
+    });
+
+    await connection.start().then(function () {
+        connection.invoke("GetAllStocks").then(function (stocks) {
+            for (let i = 0; i < stocks.length; i++) {
+                app.stocks.push(stocks[i]);
+            }
+        });
+    });
 
     try {
         await updatePortfolioView();
