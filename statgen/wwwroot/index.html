@@ -2,92 +2,124 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Portfolio Visualizer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
+          integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+          crossorigin="anonymous">
 
 </head>
 
 <body>
-    <div id="app" class="container">
-        <h1>{{ header.toLocaleUpperCase() }}</h1>
+<div id="app" class="container">
+    <h1>{{ header.toLocaleUpperCase() }}</h1>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Symbol</th>
-                    <th>Price</th>
-                    <th>Open</th>
-                    <th>High</th>
-                    <th>Low</th>
-                    <th>Change</th>
-                    <th>%</th>
-                </tr>
-            </thead>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Open</th>
+            <th>High</th>
+            <th>Low</th>
+            <th>Change</th>
+            <th>%</th>
+        </tr>
+        </thead>
 
-            <tbody>
-                <tr v-for="(item, index) in stocks" :key="index">
-                    <td>{{item.symbol}}</td>
-                    <td>{{item.price}}</td>
-                    <td>{{item.open}}</td>
-                    <td>{{item.high}}</td>
-                    <td>{{item.low}}</td>
-                    <td>{{item.change}}</td>
-                    <td>{{item.perc}}</td>
+        <tbody>
+        <tr v-for="(item, index) in stocks" :key="index">
+            <td>{{item.symbol}}</td>
+            <td>{{item.price}}</td>
+            <td>{{item.open}}</td>
+            <td>{{item.high}}</td>
+            <td>{{item.low}}</td>
+            <td>{{item.change}}</td>
+            <td>{{item.perc}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-md">
+            <h3>Daily Stats</h3>
+
+            <table class="table table-bordered">
+                <tr v-for="(value, key) in portfolioDailyRiskStats">
+                    <th>{{ key }}</th>
+                    <td>{{ value.toFixed(4) }}</td>
                 </tr>
-            </tbody>
-        </table>
-        <div class="row">
-            <canvas id="allocChart" class="col-md-6"></canvas>
-            
-            <div class="col-md-6">
-                <table class="table table-bordered table-responsive-md">
-                    <thead>
-                        <tr>
-                            <th>Qty</th>
-                            <th>Stock</th>
-                            <th>Unit Price</th>
-                            <th>Total Value</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th colspan="3">Portfolio Total</th>
-                            <th>{{portfolioTotal.toFixed(2)}}</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <tr v-for="(item, index) in portfolioStocks" :key="index">
-                            <td>{{item.qty}}</td>
-                            <td>{{item.stockName}}</td>
-                            <td>{{item.unitValue.toFixed(2)}}</td>
-                            <td>{{item.totalValue.toFixed(2)}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            </table>
         </div>
-        <h2>Partial Update</h2>
-        <form v-on:submit.prevent="updateStockPrice">
-            <select v-model="stockIndex">
-                <option v-for="(item, index) in portfolioStocks" :value="item.stockId"> {{item.stockName}} </option>
-            </select>
-            <input type="text" v-model="newStockPrice" />
-            <input type="submit" value="Send" />
-        </form>
 
+        <div class="col-md">
+            <h3>Hourly Stats</h3>
 
+            <table class="table table-bordered">
+                <tr v-for="(value, key) in portfolioHourlyRiskStats">
+                    <th>{{ key }}</th>
+                    <td>{{ value.toFixed(4) }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="col-md">
+            <h3>Minute Stats</h3>
+            <table class="table table-bordered">
+                <tr v-for="(value, key) in portfolioMinuteRiskStats">
+                    <th>{{ key }}</th>
+                    <td>{{ value.toFixed(4) }}</td>
+                </tr>
+            </table>
+        </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@aspnet/signalr/dist/browser/signalr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/msgpack5/dist/msgpack5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@aspnet/signalr-protocol-msgpack/dist/browser/signalr-protocol-msgpack.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
-    <script src="lib/statgen.js"></script>
+    <div class="row">
+        <div class="col-md">
+        <canvas id="allocChart"></canvas>
+        </div>
+        <div class="col-md">
+            <table class="table table-bordered table-responsive-md">
+                <thead>
+                <tr>
+                    <th>Qty</th>
+                    <th>Stock</th>
+                    <th>Unit Price</th>
+                    <th>Total Value</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th colspan="3">Portfolio Total</th>
+                    <th>{{portfolioTotal.toFixed(2)}}</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                <tr v-for="(item, index) in portfolioStocks" :key="index">
+                    <td>{{item.qty}}</td>
+                    <td>{{item.stockName}}</td>
+                    <td>{{item.unitValue.toFixed(2)}}</td>
+                    <td>{{item.totalValue.toFixed(2)}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <h2>Partial Update</h2>
+    <form v-on:submit.prevent="updateStockPrice">
+        <select v-model="stockIndex">
+            <option v-for="(item, index) in portfolioStocks" :value="item.stockId"> {{item.stockName}}</option>
+        </select>
+        <input type="text" v-model="newStockPrice"/>
+        <input type="submit" value="Send"/>
+    </form>
+
+    
+</div>
+<script src="https://cdn.jsdelivr.net/combine/npm/chart.js@2.7.2/dist/Chart.min.js,npm/@aspnet/signalr/dist/browser/signalr.min.js,npm/msgpack5/dist/msgpack5.min.js,npm/@aspnet/signalr-protocol-msgpack/dist/browser/signalr-protocol-msgpack.min.js,npm/vue/dist/vue.min.js"></script>
+<script src="lib/statgen.js"></script>
 </body>
 
 </html>
