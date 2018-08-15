@@ -140,7 +140,7 @@
         await Promise.all([
          updatePortfolioDailyRiskView(),
          updatePortfolioHourlyRiskView(),
-         updatePortfolioMinuteRiskView(),
+         updatePortfolioMinuteRiskView()
         ]);
         
     };
