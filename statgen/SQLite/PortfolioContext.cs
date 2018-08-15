@@ -6,7 +6,7 @@ namespace statgen.SQLite
 {
     public class PortfolioContext : DbContext
     {
-        public PortfolioContext(DbContextOptions<PortfolioContext> options)
+        public PortfolioContext(DbContextOptions options)
             : base(options)
         {
         }

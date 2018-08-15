@@ -1,8 +1,8 @@
 ﻿namespace statgen.Models
 {
-    public class PortfolioComponentViewDTO
+    public class PortfolioComponentViewDto
     {
-        public PortfolioComponentViewDTO(int stockId, int qty, string stockName, double unitValue, double totalValue)
+        public PortfolioComponentViewDto(int stockId, int qty, string stockName, double unitValue, double totalValue)
         {
             StockId = stockId;
             Qty = qty;

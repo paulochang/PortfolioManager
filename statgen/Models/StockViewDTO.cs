@@ -2,7 +2,7 @@
 
 namespace statgen.Models
 {
-    public class StockViewDTO
+    public class StockViewDto
     {
         private decimal _price;
 
