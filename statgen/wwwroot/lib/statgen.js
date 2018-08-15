@@ -10,8 +10,11 @@
         data: {
             stockIndex: null,
             newStockPrice: null,
-            header: "Shopping List App",
+            header: "Portfolio Management",
             portfolioStocks: [],
+            portfolioDailyRiskStats : null,
+            portfolioHourlyRiskStats : null,
+            portfolioMinuteRiskStats : null,
             stocks: [],
             pieData: {
                 datasets: [{
@@ -69,7 +72,7 @@
 
     let chart = new Chart(document.getElementById("allocChart"),
         {
-            type: 'pie',
+            type: "pie",
             data: app.pieData,
             options: {
                 animation: {
@@ -91,6 +94,39 @@
         await chart.update();
     };
 
+    let updatePortfolioDailyRiskView = async function () {
+        const response = await fetch("/portfolio/1/risk/day", {
+            method: "GET",
+            headers: {
+                "content-type": "application/json"
+            }
+        });
+        // Vue specific
+        app.portfolioDailyRiskStats = await response.json();
+    };
+
+    let updatePortfolioHourlyRiskView = async function () {
+        const response = await fetch("/portfolio/1/risk/hour", {
+            method: "GET",
+            headers: {
+                "content-type": "application/json"
+            }
+        });
+        // Vue specific
+        app.portfolioHourlyRiskStats = await response.json();
+    };
+
+    let updatePortfolioMinuteRiskView = async function () {
+        const response = await fetch("/portfolio/1/risk/minute", {
+            method: "GET",
+            headers: {
+                "content-type": "application/json"
+            }
+        });
+        // Vue specific
+        app.portfolioMinuteRiskStats = await response.json();
+    };
+
     let updatePortfolioView = async function () {
         const response = await fetch("/portfolio/1", {
             method: "GET",
@@ -101,6 +137,12 @@
         // Vue specific
         app.portfolioStocks = await response.json();
         await chartUpdate();
+        await Promise.all([
+         updatePortfolioDailyRiskView(),
+         updatePortfolioHourlyRiskView(),
+         updatePortfolioMinuteRiskView(),
+        ]);
+        
     };
     
     connection.on("UpdatePortfolio", updatePortfolioView);
@@ -121,6 +163,7 @@
         await updatePortfolioView();
     } catch (err) {
         alert("Unable to connect to API");
+        console.log(err);
     }
 
     console.log(chart);
