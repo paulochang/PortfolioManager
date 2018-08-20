@@ -12,9 +12,9 @@
             newStockPrice: null,
             header: "Portfolio Management",
             portfolioStocks: [],
-            portfolioDailyRiskStats : null,
-            portfolioHourlyRiskStats : null,
-            portfolioMinuteRiskStats : null,
+            portfolioDailyRiskStats: null,
+            portfolioHourlyRiskStats: null,
+            portfolioMinuteRiskStats: null,
             stocks: [],
             pieData: {
                 datasets: [{
@@ -43,9 +43,14 @@
         },
         methods: {
             async updateStockPrice() {
-                await fetch("/stock/"+this.stockIndex+"/price", {
-                    method: "PUT",
-                    body: JSON.stringify(this.newStockPrice),
+                await fetch("/stock/" + this.stockIndex + "/price", {
+                    method: "POST",
+                    body: JSON.stringify(
+                        {
+                            DateTime: new Date().toISOString(),
+                            Price: this.newStockPrice
+                        }
+                    ),
                     headers: {
                         "content-type": "application/json"
                     }
@@ -54,7 +59,6 @@
             }
         }
     });
-
 
 
     let priceUpdate = function (stock) {
@@ -76,8 +80,8 @@
             data: app.pieData,
             options: {
                 animation: {
-                    animateRotate : false,
-                    animateScale : false
+                    animateRotate: false,
+                    animateScale: false
                 }
             }
         });
@@ -128,6 +132,12 @@
     };
 
     let updatePortfolioView = async function () {
+        await Promise.all([
+            updatePortfolioDailyRiskView(),
+            updatePortfolioHourlyRiskView(),
+            updatePortfolioMinuteRiskView()
+        ]);
+        
         const response = await fetch("/portfolio/1", {
             method: "GET",
             headers: {
@@ -137,14 +147,9 @@
         // Vue specific
         app.portfolioStocks = await response.json();
         await chartUpdate();
-        await Promise.all([
-         updatePortfolioDailyRiskView(),
-         updatePortfolioHourlyRiskView(),
-         updatePortfolioMinuteRiskView()
-        ]);
-        
+
     };
-    
+
     connection.on("UpdatePortfolio", updatePortfolioView);
 
     connection.on("Update", stock => {
