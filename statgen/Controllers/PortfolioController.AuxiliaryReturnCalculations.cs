@@ -21,20 +21,20 @@ namespace statgen.Controllers
             //Get list of portfolios to update
             List<Portfolio> portfoliosToUpdate = await _portfolioContext.PortfolioAllocations
                 .Where(pa => pa.StockId == stockId)
-                .Include(p => p.Portfolio)
                 .Select(pa => pa.Portfolio)
                 .ToListAsync();
 
             int[] portfolioIdList = portfoliosToUpdate.Select(p => p.PortfolioId).ToArray();
-            
+
             List<PortfolioAllocation> relevantPortfolioAllocations = _portfolioContext.PortfolioAllocations
                 .Where(pa => portfolioIdList.Contains(pa.PortfolioId))
                 .ToList();
             //Get array of stocks to monitor
             int[] stockList = relevantPortfolioAllocations.Select(p => p.StockId).Distinct().ToArray();
-            
+
             //Get Stock->Price mapping 
             Dictionary<int, double> priceByStockIdDictionary = new Dictionary<int, double>();
+            
             foreach (int currentStockId in stockList)
             {
                 double currentStockPrice = await _portfolioContext.PriceRecords
@@ -46,14 +46,13 @@ namespace statgen.Controllers
                 priceByStockIdDictionary.Add(currentStockId, currentStockPrice);
             }
 
-
             Dictionary<int, double> portfoliosByPrice = new Dictionary<int, double>();
             //submit new portfolio prices and update old ones
             foreach (Portfolio portfolio in portfoliosToUpdate)
             {
                 var portfolioTotalPrice =
                     portfolio.PortfolioStocks.Sum(ps => ps.Qty * priceByStockIdDictionary[ps.StockId]);
-                
+
                 var existingRecord = await _portfolioContext.PortfolioPriceRecords
                     .Where(pr => pr.Datetime == savingDate && pr.PortfolioId == portfolio.PortfolioId)
                     .FirstOrDefaultAsync();
@@ -62,7 +61,6 @@ namespace statgen.Controllers
                 {
                     //modify existing record if already exists
                     existingRecord.Price = portfolioTotalPrice;
-                    _portfolioContext.PortfolioPriceRecords.Update(existingRecord);
                 }
                 else
                 {
@@ -76,6 +74,10 @@ namespace statgen.Controllers
                         });
                 }
 
+                if (portfolio.LastUpdated < savingDate)
+                {
+                    portfolio.LastUpdated = savingDate;
+                }
                 portfoliosByPrice.Add(portfolio.PortfolioId, portfolioTotalPrice);
             }
 
@@ -92,13 +94,25 @@ namespace statgen.Controllers
                 .Select(pr => pr.Price)
                 .FirstAsync();
 
-            _portfolioContext.PortfolioDailyReturns.Add(
-                new PortfolioDailyReturn()
-                {
-                    DateTime = savingDate,
-                    Return = portfolioPrice - nearestDailyPrice,
-                    PortfolioId = portfolioId
-                });
+            var existingRecord = await _portfolioContext.PortfolioDailyReturns
+                .Where(pr => pr.DateTime == savingDate && pr.PortfolioId == portfolioId)
+                .FirstOrDefaultAsync();
+
+            if (existingRecord != null)
+            {
+                //modify existing record if already exists
+                existingRecord.Return = portfolioPrice - nearestDailyPrice;
+            }
+            else
+            {
+                _portfolioContext.PortfolioDailyReturns.Add(
+                    new PortfolioDailyReturn()
+                    {
+                        DateTime = savingDate,
+                        Return = portfolioPrice - nearestDailyPrice,
+                        PortfolioId = portfolioId
+                    });
+            }
         }
 
         private async Task CalcPortfolioHourReturn(int portfolioId, double portfolioPrice, DateTime savingDate)
@@ -111,13 +125,25 @@ namespace statgen.Controllers
                 .Select(pr => pr.Price)
                 .FirstAsync();
 
-            _portfolioContext.PortfolioHourlyReturns.Add(
-                new PortfolioHourlyReturn()
-                {
-                    DateTime = savingDate,
-                    Return = portfolioPrice - nearestHourPrice,
-                    PortfolioId = portfolioId
-                });
+            var existingRecord = await _portfolioContext.PortfolioHourlyReturns
+                .Where(pr => pr.DateTime == savingDate && pr.PortfolioId == portfolioId)
+                .FirstOrDefaultAsync();
+
+            if (existingRecord != null)
+            {
+                //modify existing record if already exists
+                existingRecord.Return = portfolioPrice - nearestHourPrice;
+            }
+            else
+            {
+                _portfolioContext.PortfolioHourlyReturns.Add(
+                    new PortfolioHourlyReturn()
+                    {
+                        DateTime = savingDate,
+                        Return = portfolioPrice - nearestHourPrice,
+                        PortfolioId = portfolioId
+                    });
+            }
         }
 
         private async Task CalcPortfolioMinuteReturn(int portfolioId, double portfolioPrice, DateTime savingDate)
@@ -136,13 +162,25 @@ namespace statgen.Controllers
                 .Select(pr => pr.Price)
                 .FirstAsync();
 
-            _portfolioContext.PortfolioMinuteReturns.Add(
-                new PortfolioMinuteReturn()
-                {
-                    DateTime = savingDate,
-                    Return = portfolioPrice - nearestMinutePrice,
-                    PortfolioId = portfolioId
-                });
+            var existingRecord = await _portfolioContext.PortfolioMinuteReturns
+                .Where(pr => pr.DateTime == savingDate && pr.PortfolioId == portfolioId)
+                .FirstOrDefaultAsync();
+
+            if (existingRecord != null)
+            {
+                //modify existing record if already exists
+                existingRecord.Return = portfolioPrice - nearestMinutePrice;
+            }
+            else
+            {
+                _portfolioContext.PortfolioMinuteReturns.Add(
+                    new PortfolioMinuteReturn()
+                    {
+                        DateTime = savingDate,
+                        Return = portfolioPrice - nearestMinutePrice,
+                        PortfolioId = portfolioId
+                    });
+            }
         }
 
         #endregion
@@ -159,13 +197,25 @@ namespace statgen.Controllers
                 .Select(pr => pr.Price)
                 .FirstAsync();
 
-            _portfolioContext.DailyReturns.Add(
-                new StockDailyReturn()
-                {
-                    DateTime = savingDate,
-                    Return = stockPriceDto.Price - nearestDailyPrice,
-                    StockId = stockId
-                });
+            var existingRecord = await _portfolioContext.DailyReturns
+                .Where(pr => pr.DateTime == savingDate && pr.StockId == stockId)
+                .FirstOrDefaultAsync();
+
+            if (existingRecord != null)
+            {
+                //modify existing record if already exists
+                existingRecord.Return = stockPriceDto.Price - nearestDailyPrice;
+            }
+            else
+            {
+                _portfolioContext.DailyReturns.Add(
+                    new StockDailyReturn()
+                    {
+                        DateTime = savingDate,
+                        Return = stockPriceDto.Price - nearestDailyPrice,
+                        StockId = stockId
+                    });
+            }
         }
 
         private async Task CalcStockHourReturn(int stockId, StockPriceDto stockPriceDto, DateTime savingDate)
@@ -178,13 +228,25 @@ namespace statgen.Controllers
                 .Select(pr => pr.Price)
                 .FirstAsync();
 
-            _portfolioContext.HourlyReturns.Add(
-                new StockHourlyReturn()
-                {
-                    DateTime = savingDate,
-                    Return = stockPriceDto.Price - nearestHourPrice,
-                    StockId = stockId
-                });
+            var existingRecord = await _portfolioContext.HourlyReturns
+                .Where(pr => pr.DateTime == savingDate && pr.StockId == stockId)
+                .FirstOrDefaultAsync();
+
+            if (existingRecord != null)
+            {
+                //modify existing record if already exists
+                existingRecord.Return = stockPriceDto.Price - nearestHourPrice;
+            }
+            else
+            {
+                _portfolioContext.HourlyReturns.Add(
+                    new StockHourlyReturn()
+                    {
+                        DateTime = savingDate,
+                        Return = stockPriceDto.Price - nearestHourPrice,
+                        StockId = stockId
+                    });
+            }
         }
 
         private async Task CalcStockMinuteReturn(int stockId, StockPriceDto stockPriceDto, DateTime savingDate)
@@ -197,13 +259,25 @@ namespace statgen.Controllers
                 .Select(pr => pr.Price)
                 .FirstAsync();
 
-            _portfolioContext.MinuteReturns.Add(
-                new StockMinuteReturn()
-                {
-                    DateTime = savingDate,
-                    Return = stockPriceDto.Price - nearestMinutePrice,
-                    StockId = stockId
-                });
+            var existingRecord = await _portfolioContext.MinuteReturns
+                .Where(pr => pr.DateTime == savingDate && pr.StockId == stockId)
+                .FirstOrDefaultAsync();
+
+            if (existingRecord != null)
+            {
+                //modify existing record if already exists
+                existingRecord.Return = stockPriceDto.Price - nearestMinutePrice;
+            }
+            else
+            {
+                _portfolioContext.MinuteReturns.Add(
+                    new StockMinuteReturn()
+                    {
+                        DateTime = savingDate,
+                        Return = stockPriceDto.Price - nearestMinutePrice,
+                        StockId = stockId
+                    });
+            }
         }
 
         private async Task CreateStockPriceRecord(int stockId, StockPriceDto stockPriceDto, DateTime savingDate)
@@ -217,7 +291,6 @@ namespace statgen.Controllers
             {
                 //modify existing record if already exists
                 existingRecord.Price = stockPriceDto.Price;
-                _portfolioContext.PriceRecords.Update(existingRecord);
             }
             else
             {

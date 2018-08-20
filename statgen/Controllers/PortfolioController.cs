@@ -65,7 +65,7 @@ namespace statgen.Controllers
 
             // if current stock price is more recent then ...
             // update the .. update time and latest price information 
-            if (currentStock.LastUpdated < savingDate)
+            if (currentStock.LastUpdated <= savingDate)
             {
                 currentStock.LatestPrice = stockPriceDto.Price;
                 currentStock.LastUpdated = savingDate;
