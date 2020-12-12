@@ -44,7 +44,7 @@
         methods: {
             async updateStockPrice() {
                 await fetch("/stock/" + this.stockIndex + "/price", {
-                    method: "POST",
+                    method: "PUT",
                     body: JSON.stringify(
                         {
                             DateTime: new Date().toISOString(),
@@ -137,7 +137,7 @@
             updatePortfolioHourlyRiskView(),
             updatePortfolioMinuteRiskView()
         ]);
-        
+
         const response = await fetch("/portfolio/1", {
             method: "GET",
             headers: {

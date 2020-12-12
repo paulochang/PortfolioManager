@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="statgen.Models.PortfolioComponentViewDto">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAgQAAAAACAAAIAAAAAAA=</HashCode>
+      <FileName>Models\PortfolioComponentViewDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="statgen.Models.RiskStatsViewDto">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABIBCBEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\RiskStatsViewDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="statgen.Models.PortfolioRiskStatsViewDto">
+    <Position X="5.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Models\RiskStatsViewDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="statgen.Models.StockRiskStatsViewDto">
+    <Position X="2.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAIAAAAAAA=</HashCode>
+      <FileName>Models\RiskStatsViewDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="statgen.Models.StockPriceDto">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\StockPriceDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="statgen.Models.StockViewDto">
+    <Position X="8.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAQBAJAAAAgAAAAAAAAhAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\StockViewDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

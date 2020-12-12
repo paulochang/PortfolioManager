@@ -11,6 +11,8 @@ namespace statgen.SQLite
         {
         }
 
+        public DbSet<Watchlist> Watchlists { get; set; }
+        public DbSet<WatchlistAllocation> WatchlistAllocations { get; set; }
         public DbSet<Portfolio> Portfolios { get; set; }
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<PortfolioAllocation> PortfolioAllocations { get; set; }
@@ -33,6 +35,22 @@ namespace statgen.SQLite
         }
     }
 
+    public class Watchlist
+    {
+        public int WatchlistId { get; set; }
+        public string Owner { get; set; }
+        public ICollection<WatchlistAllocation> WatchlistStocks { get; set; }
+    }
+
+    public class WatchlistAllocation
+    {
+        public int Id { get; set; }
+        public int WatchlistId { get; set; }
+        public Watchlist Watchlist { get; set; }
+        public int StockId { get; set; }
+        public Stock Stock { get; set; }
+    }
+
     public class Portfolio
     {
         public int PortfolioId { get; set; }
@@ -52,10 +70,6 @@ namespace statgen.SQLite
         public ICollection<StockMinuteReturn> StockMinuteReturns { get; set; }
         public ICollection<StockDailyReturn> StockDailyReturns { get; set; }
         public ICollection<StockHourlyReturn> StockHourlyReturns { get; set; }
-        public ICollection<PortfolioPriceRecord> PortfolioPriceRecords { get; set; }
-        public ICollection<PortfolioMinuteReturn> PortfolioMinuteReturns { get; set; }
-        public ICollection<PortfolioDailyReturn> PortfolioDailyReturns { get; set; }
-        public ICollection<PortfolioHourlyReturn> PortfolioHourlyReturns { get; set; }
     }
 
     public class PortfolioAllocation

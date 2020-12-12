@@ -44,7 +44,7 @@ namespace statgen.Controllers
                 ).ToListAsync();
         }
 
-        [HttpPost("/stock/{stockid}/price")]
+        [HttpPut("/stock/{stockid}/price")]
         public async Task PutStockPriceChange(int stockid, StockPriceDto stockPriceDto)
         {
             
